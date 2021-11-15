@@ -1,5 +1,12 @@
 NAME   :=	minishell
-SRC    :=	minishell.c signal_handler.c single_quote.c
+SRC    :=	minishell.c quotes_handler.c dollar_handler.c \
+			split_into_mandatory.c exec_apps.c exec_u_apps.c \
+			garbage_collector.c tokens_handler.c tokens_her_bonus.c \
+			builtin_errors.c app_handler.c wildcards_handler.c minishell_exit.c \
+			minishell_unset.c minishell_export_u.c utils.c minishell_export.c minishell_cd.c \
+			minishell_echo.c errors_handler.c minishell_pwd.c lst_functions.c minishell_env.c shlvl_handler.c minishell_signals.c \
+			split_into_asterisk.c split_into_asterisk_u.c ft_split_once.c
+
 OBJ    :=	$(SRC:.c=.o)
 HDR    :=	minishell.h
 CC     :=	gcc
@@ -8,27 +15,25 @@ VPATH  :=	src include
 
 all:		$(NAME)
 
-# -lreadline - readline, add_history
-# -ltermcap - tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
 $(NAME):	$(OBJ)
 			$(MAKE) -C libft
-			$(CC) $(CFLAGS) -Llibft -lft -lreadline -L/Users/signacia/.brew/Cellar/readline/8.1/lib/ -ltermcap $(OBJ) -o $(NAME)
+			$(CC) $(CFLAGS) -Llibft -lft -lreadline -L/Users/${USER}/.brew/Cellar/readline/8.1/lib/ -ltermcap $(OBJ) -o $(NAME)
 
 bonus:
 
 %.o: %.c
-			$(CC) $(CFLAGS) -Iinclude -Ilibft -I/Users/signacia/.brew/Cellar/readline/8.1/include -c $< -o $@
+			$(CC) $(CFLAGS) -Iinclude -Ilibft -I/Users/${USER}/.brew/Cellar/readline/8.1/include -c $< -o $@
 
 include		$(wildcard *.d)
 
-test:		test.c
-			${CC} ${CFLAGS} test.c
+test:
+			$(CC) $(CFLAGS) -o test test.c -lreadline
 
 readline:
 			brew install readline
 
 readline_uninstall:
-			brew uninstall readline		
+			brew uninstall readline
 
 clean:
 			rm -rf *.o *.d
