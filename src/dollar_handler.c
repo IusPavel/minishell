@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 15:46:16 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/14 20:31:11 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/16 17:26:01 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,11 @@ static int	dollar_env(t_shell *minishell, int *i, int j)
 	tmp2 = ft_strjoin(env_value, tmp3);
 	free(tmp3);
 	tmp = ft_strjoin_free(tmp, tmp2);
+	if (ft_strlen(tmp) == 0)
+	{
+		free(tmp);
+		tmp = NULL;
+	}
 	free(minishell->input);
 	minishell->input = tmp;
 	return (0);

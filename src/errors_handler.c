@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 16:04:41 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/15 20:16:55 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/16 19:09:36 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,7 @@ int	executing_error(t_shell *minishell)
 {
 	struct stat	buff;
 
-	stat(minishell->apps->argv[0], &buff);
-	if (S_ISDIR(buff.st_mode))
+	if (!stat(minishell->apps->argv[0], &buff) && S_ISDIR(buff.st_mode))
 	{
 		write(2, "minishell: ", 11);
 		write(2, minishell->apps->argv[0], ft_strlen(minishell->apps->argv[0]));

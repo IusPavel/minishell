@@ -2,9 +2,11 @@ NAME   :=	minishell
 SRC    :=	minishell.c quotes_handler.c dollar_handler.c \
 			split_into_mandatory.c exec_apps.c exec_u_apps.c \
 			garbage_collector.c tokens_handler.c tokens_her_bonus.c \
-			builtin_errors.c app_handler.c wildcards_handler.c minishell_exit.c \
-			minishell_unset.c minishell_export_u.c utils.c minishell_export.c minishell_cd.c \
-			minishell_echo.c errors_handler.c minishell_pwd.c lst_functions.c minishell_env.c shlvl_handler.c minishell_signals.c \
+			builtin_errors.c app_handler.c wildcards_handler.c utils.c \
+			minishell_exit.c minishell_unset.c minishell_export_u.c \
+			minishell_export.c minishell_cd.c minishell_cd_u.c \
+			minishell_echo.c errors_handler.c minishell_pwd.c lst_functions.c \
+			minishell_env.c shlvl_handler.c minishell_signals.c \
 			split_into_asterisk.c split_into_asterisk_u.c ft_split_once.c
 
 OBJ    :=	$(SRC:.c=.o)
