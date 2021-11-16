@@ -5,102 +5,95 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/08 17:24:35 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/16 19:45:21 by signacia         ###   ########.fr       */
+/*   Created: 2021/09/07 15:37:01 by prochell          #+#    #+#             */
+/*   Updated: 2021/11/16 19:53:03 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	preparing_head(t_shell *minishell)
+static int	cd_get_home(t_shell *minishell)
 {
-	int		i;
-	char	*ret;
+	char	*tmp;
+	char	*tmp_str;
 
-	i = 0;
-	ret = NULL;
-	while (minishell->input[i] == ' ' || minishell->input[i] == '\t')
-		i++;
-	if (minishell->input[i] == '|' || minishell->input[i] == '&')
+	tmp = find_pwd(minishell, "HOME");
+	if (!tmp)
+		return (ft_error_cd_not_set(minishell, "HOME"));
+	tmp_str = getcwd(NULL, 0);
+	if (chdir(tmp) != 0)
 	{
-		if (minishell->input[i] == minishell->input[i + 1])
-			return (syntax_error(minishell, minishell->input + i, 2));
-		return (syntax_error(minishell, minishell->input + i, 1));
+		if (tmp_str != NULL)
+			free(tmp_str);
+		return (ft_error_cd_no_file(minishell, tmp));
 	}
-	if (minishell->input[i] != 0)
-		ret = ft_strdup(minishell->input + i);
-	free(minishell->input);
-	minishell->input = ret;
+	change_old_new_pwd(minishell, tmp_str, "OLDPWD");
+	free(tmp_str);
+	change_old_new_pwd(minishell, tmp, "PWD");
+	minishell->child_exit_status = 0;
 	return (0);
 }
 
-static int	minishell_parser(t_shell *minishell, int *i)
+static int	cd_swap(t_shell *minishell)
 {
-	if (minishell->input[*i] == '$')
-		return (dollar_handler(minishell, i));
-	else if (minishell->input[*i] == '\'')
-		return (single_quote(minishell, i));
-	else if (minishell->input[*i] == '\"')
-		return (double_quote(minishell, i));
-	else if (minishell->input[*i] == ' ' || minishell->input[*i] == '\t'
-		|| minishell->input[*i] == 0)
-		return (split_input(minishell, i));
-	else if (tokens_handler(minishell, i))
-		return (1);
-	else if (wildcards_handler(minishell, i))
-		return (1);
-	return (0);
-}
+	char	*tmp;
+	char	*tmp_str;
 
-static int	minishell_pre_parser(t_shell *minishell)
-{
-	int	i;
-
-	i = 0;
-	if (preparing_head(minishell) || minishell->input == NULL)
-		return (0);
-	add_application(minishell);
-	while (minishell->input)
+	tmp = find_pwd(minishell, "OLDPWD");
+	if (!tmp)
+		return (ft_error_cd_not_set(minishell, "OLDPWD"));
+	tmp_str = getcwd(NULL, 0);
+	if (chdir(tmp) != 0)
 	{
-		if (minishell_parser(minishell, &i))
-			return (0);
-		i++;
+		if (tmp_str != NULL)
+			free(tmp_str);
+		return (ft_error_cd_no_file(minishell, tmp));
+	}
+	tmp = ft_strdup(tmp);
+	change_old_new_pwd(minishell, tmp_str, "OLDPWD");
+	free(tmp_str);
+	change_old_new_pwd(minishell, tmp, "PWD");
+	write(1, tmp, ft_strlen(tmp));
+	write(1, "\n", 1);
+	free(tmp);
+	minishell->child_exit_status = 0;
+	return (0);
+}
+
+static int	cd_arg(t_shell *minishell, char *str)
+{
+	char	*oldpwd;
+	char	*newpwd;
+
+	oldpwd = getcwd(NULL, 0);
+	if (oldpwd == NULL)
+		return (ft_error_cd(minishell));
+	if (chdir(str) != 0)
+	{
+		free(oldpwd);
+		return (ft_error_cd_no_file(minishell, str));
+	}
+	newpwd = getcwd(NULL, 0);
+	if (newpwd == NULL)
+		return (ft_error_cd(minishell));
+	change_old_new_pwd(minishell, oldpwd, "OLDPWD");
+	free(oldpwd);
+	change_old_new_pwd(minishell, newpwd, "PWD");
+	free(newpwd);
+	minishell->child_exit_status = 0;
+	return (0);
+}
+
+int	get_cd(t_shell *minishell, char **str)
+{
+	if (!ft_strcmp("cd", str[0]))
+	{
+		if (!str[1] || !ft_strcmp("~", str[1]))
+			return (cd_get_home(minishell));
+		else if (!ft_strcmp("-", str[1]))
+			return (cd_swap(minishell));
+		else
+			return (cd_arg(minishell, str[1]));
 	}
 	return (1);
-}
-
-static void	initialization(t_shell *minishell, int argc, char **argv)
-{
-	minishell->argc = argc;
-	minishell->argv = argv;
-	minishell->environment = NULL;
-	minishell->child_exit_status = 0;
-	minishell->apps = NULL;
-	minishell->launch_method = 0;
-}
-
-int	main(int argc, char **argv, char **envp)
-{
-	t_shell	minishell;
-
-	initialization(&minishell, argc, argv);
-	get_environment(&minishell, envp);
-	rl_outstream = stderr;
-	base_signal();
-	check_shlvl(&minishell);
-	while (1)
-	{
-		minishell.input = readline("\e[0;32mminishell$\e[0;39m ");
-		if (!(minishell.input))
-			input_eof();
-		if (ft_strlen(minishell.input) == 0)
-		{
-			free(minishell.input);
-			continue ;
-		}
-		add_history(minishell.input);
-		if (minishell_pre_parser(&minishell))
-			minishell_scheduler(&minishell);
-		garbage_collector(&minishell);
-	}
 }
