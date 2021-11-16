@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: prochell <prochell@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/11/16 20:18:53 by prochell          #+#    #+#              #
+#    Updated: 2021/11/16 20:18:55 by prochell         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME   :=	minishell
 SRC    :=	minishell.c quotes_handler.c dollar_handler.c \
 			split_into_mandatory.c exec_apps.c exec_u_apps.c \
