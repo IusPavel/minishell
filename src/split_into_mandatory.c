@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 16:05:21 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/16 17:28:58 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/18 18:03:05 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static int	split_into_heredoc(t_shell *minishell, int *i)
 	while (1)
 	{
 		eof = readline("> ");
-		if (!eof)
+		if (!eof || errno == EINTR)
 			break ;
 		if (!ft_strcmp(minishell->apps->heredoc, eof))
 		{

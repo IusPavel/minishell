@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/13 19:37:20 by prochell          #+#    #+#             */
-/*   Updated: 2021/11/13 21:02:58 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/18 19:25:17 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	cntrl_c(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 	errno = 1;
-	return ;
 }
 
 void	cntrl_c2(int sig)
@@ -29,16 +28,28 @@ void	cntrl_c2(int sig)
 	write(2, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	errno = 1;
-	return ;
 }
 
-void	base_signal(void)
+void	cntrl_backslash(int sig)
 {
-	signal(SIGTERM, SIG_IGN);
-	signal(SIGINT, cntrl_c);
-	signal(SIGQUIT, SIG_IGN);
-	return ;
+	(void)sig;
+	write(2, "Quit: 3\n", 8);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+}
+
+void	base_signal(int mode)
+{
+	if (mode == 0)
+	{
+		signal(SIGINT, cntrl_c);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else if (mode == 1)
+	{
+		signal(SIGINT, cntrl_c2);
+		signal(SIGQUIT, cntrl_backslash);
+	}
 }
 
 void	input_eof(void)

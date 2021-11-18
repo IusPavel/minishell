@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:35 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/14 20:39:06 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/18 19:26:15 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	main(int argc, char **argv, char **envp)
 	initialization(&minishell, argc, argv);
 	get_environment(&minishell, envp);
 	rl_outstream = stderr;
-	base_signal();
+	base_signal(0);
 	check_shlvl(&minishell);
 	while (1)
 	{

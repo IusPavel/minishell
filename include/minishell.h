@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 18:38:10 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/15 19:57:01 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/18 19:25:49 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ int		get_exec(t_shell *minishell, char **str);
 char	*ft_getenv_value(t_envp *lst, char *key);
 void	cntrl_c(int sig);
 void	cntrl_c2(int sig);
+void	cntrl_backslash(int sig);
 void	ft_lstadd_back_minishell(t_envp **lst, t_envp *new);
 void	ft_lstclear_minishell(t_envp **lst);
 t_envp	*ft_lstlast_minishell(t_envp *lst);
@@ -158,7 +159,7 @@ int		ft_error_export(t_shell *minishell, char *str);
 int		ft_error_unset(t_shell *minishell, char *str);
 void	check_list(t_envp *list);
 char	**get_arr_env(t_envp *env);
-void	base_signal(void);
+void	base_signal(int mode);
 void	input_eof(void);
 void	check_shlvl(t_shell *minishell);
 char	**ft_split_once(char *str, char ch);

@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 19:46:17 by prochell          #+#    #+#             */
-/*   Updated: 2021/11/10 12:47:25 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/18 19:16:19 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	check_export_dup(t_envp *env, char **arr)
 		tmp_exp = tmp_exp->next;
 	}
 	ft_lstadd_back_minishell(&env, ft_lstnew_minishell(arr[0], arr[1]));
+	free(arr);
 	return (0);
 }
 
