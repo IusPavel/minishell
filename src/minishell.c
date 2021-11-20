@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:24:35 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/18 19:26:15 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/20 15:00:57 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ static int	minishell_pre_parser(t_shell *minishell)
 	while (minishell->input)
 	{
 		if (minishell_parser(minishell, &i))
+		{
+			minishell->child_exit_status = 1;
 			return (0);
+		}
 		i++;
 	}
 	return (1);
@@ -77,6 +80,9 @@ static void	initialization(t_shell *minishell, int argc, char **argv)
 	minishell->child_exit_status = 0;
 	minishell->apps = NULL;
 	minishell->launch_method = 0;
+	rl_outstream = stderr;
+	rl_catch_signals = 0;
+	rl_event_hook = loop_event;
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -85,14 +91,16 @@ int	main(int argc, char **argv, char **envp)
 
 	initialization(&minishell, argc, argv);
 	get_environment(&minishell, envp);
-	rl_outstream = stderr;
 	base_signal(0);
 	check_shlvl(&minishell);
 	while (1)
 	{
 		minishell.input = readline("\e[0;32mminishell$\e[0;39m ");
 		if (!(minishell.input))
-			input_eof();
+		{
+			write(2, "exit\n", 5);
+			exit (0);
+		}
 		if (ft_strlen(minishell.input) == 0)
 		{
 			free(minishell.input);

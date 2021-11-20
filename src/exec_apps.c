@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 16:41:29 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/18 19:25:59 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/20 14:45:47 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ void	shell_executor(t_shell *minishell)
 	{
 		if (minishell_pre_executor(minishell))
 			break ;
-		base_signal(1);
 		if (minishell->launch_method == IS_PIPE && minishell->apps->argv)
 		{
 			if (minishell_executor_pipe(minishell))
@@ -112,6 +111,7 @@ void	shell_executor(t_shell *minishell)
 void	minishell_scheduler(t_shell *minishell)
 {
 	source_fd_replacer(minishell, 0);
+	base_signal(1);
 	shell_executor(minishell);
 	base_signal(0);
 	source_fd_replacer(minishell, 1);

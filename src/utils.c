@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 19:25:47 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/18 18:20:41 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/20 00:29:24 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,10 @@ void	computing_exit_status(t_shell *minishell)
 
 	waitpid(-1, &ret, 0);
 	if (WIFSIGNALED(ret))
+	{
+		write(1, "\n", 1);
 		minishell->child_exit_status = WTERMSIG(ret) + 128;
+	}
 	else
 		minishell->child_exit_status = WEXITSTATUS(ret);
 }

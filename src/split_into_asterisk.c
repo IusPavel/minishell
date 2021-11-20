@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 16:05:18 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/08 16:05:19 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/19 23:11:09 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ static char	**search_matches(t_shell *minishell, int *i, t_aster	*astr)
 	return (ret);
 }
 
-void	split_into_asterisk(t_shell *minishell, int *i)
+int	split_into_asterisk(t_shell *minishell, int *i)
 {
 	int			k;
 	int			j;
@@ -133,4 +133,5 @@ void	split_into_asterisk(t_shell *minishell, int *i)
 		free(tmp_cards);
 	minishell->apps->token = 0;
 	minishell->apps->argv = tmp;
+	return (0);
 }

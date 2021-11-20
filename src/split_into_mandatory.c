@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 16:05:21 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/18 18:03:05 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/20 15:28:49 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,60 +62,34 @@ static int	split_into_input_file(t_shell *minishell, int *i)
 
 static int	split_into_heredoc(t_shell *minishell, int *i)
 {
-	char	*eof;
+	int	ret;
 
 	if (minishell->apps->heredoc != NULL)
 		heredoc_free(minishell);
 	minishell->apps->heredoc = ft_substr(minishell->input, 0, *i);
 	if (minishell->apps->heredoc == NULL || pipe(minishell->apps->fd_heredoc))
-		standard_error(minishell, NULL);
-	while (1)
-	{
-		eof = readline("> ");
-		if (!eof || errno == EINTR)
-			break ;
-		if (!ft_strcmp(minishell->apps->heredoc, eof))
-		{
-			free(eof);
-			break ;
-		}
-		write(minishell->apps->fd_heredoc[1], eof, ft_strlen(eof));
-		write(minishell->apps->fd_heredoc[1], "\n", 1);
-		free(eof);
-	}
-	close(minishell->apps->fd_heredoc[1]);
+		return (standard_error(minishell, NULL));
+	signal(SIGINT, ctrl_hered);
+	ret = split_into_heredoc_loop(minishell);
+	signal(SIGINT, ctrl_c);
 	minishell->apps->token = 0;
-	return (0);
+	return (ret);
 }
 
 // Expanding application table (tokens/not)
-void	expand_argv(t_shell *minishell, int *i)
+int	expand_argv(t_shell *minishell, int *i)
 {
-	int			k;
-	char		**tmp;
-
 	if (minishell->apps->token == TOKEN_REDIRECT_OUTPUT
 		|| minishell->apps->token == TOKEN_REDIRECT_OUTPUT_APPEND)
-		split_into_output_file(minishell, i);
+		return (split_into_output_file(minishell, i));
 	else if (minishell->apps->token == TOKEN_REDIRECT_INPUT)
-		split_into_input_file(minishell, i);
+		return (split_into_input_file(minishell, i));
 	else if (minishell->apps->token == TOKEN_HEREDOC)
-		split_into_heredoc(minishell, i);
+		return (split_into_heredoc(minishell, i));
 	else if (minishell->apps->token == WILDCARD_ASTERISK)
-		split_into_asterisk(minishell, i);
+		return (split_into_asterisk(minishell, i));
 	else
-	{
-		k = -1;
-		tmp = (char **)malloc(sizeof(char *) * (++(minishell->apps->argc) + 1));
-		while (++k < minishell->apps->argc - 1)
-			tmp[k] = minishell->apps->argv[k];
-		if (minishell->apps->argv != NULL)
-			free(minishell->apps->argv);
-		tmp[k] = ft_substr(minishell->input, 0, *i);
-		tmp[k + 1] = NULL;
-		minishell->apps->is_argv = 1;
-		minishell->apps->argv = tmp;
-	}
+		return (split_into_argument(minishell, i));
 }
 
 // Expanding application table (launching of expander & removing spaces)
@@ -124,7 +98,8 @@ int	split_input(t_shell *minishell, int *i)
 	char	*ret;
 
 	ret = NULL;
-	expand_argv(minishell, i);
+	if (expand_argv(minishell, i))
+		return (1);
 	while (minishell->input[*i] != 0 && (minishell->input[*i + 1] == ' '
 			|| minishell->input[*i + 1] == '\t'))
 		++(*i);

@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 18:38:10 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/18 19:25:49 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/20 15:10:05 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,11 @@ void	add_application(t_shell *minishell);
 int		dollar_handler(t_shell *minishell, int *i);
 int		single_quote(t_shell *minishell, int *i);
 int		double_quote(t_shell *minishell, int *i);
-void	expand_argv(t_shell *minishell, int *i);
+int		expand_argv(t_shell *minishell, int *i);
 int		split_input(t_shell *minishell, int *i);
-void	split_into_asterisk(t_shell *minishell, int *i);
+int		split_into_argument(t_shell *minishell, int *i);
+int		split_into_asterisk(t_shell *minishell, int *i);
+int		split_into_heredoc_loop(t_shell *minishell);
 t_aster	create_astr(void);
 char	**lonely_pattern(char *pattern, t_aster	*astr);
 int		tokens_handler(t_shell *minishell, int *i);
@@ -116,6 +118,10 @@ int		runtime_error(t_shell *minishell, char *arg_name);
 int		standard_error(t_shell *minishell, char *arg_name);
 int		executing_error(t_shell *minishell);
 int		pid_error(t_shell *minishell);
+int		loop_event(void);
+void	ctrl_c2(int sig);
+void	ctrl_hered(int sig);
+void	cntrl_backslash(int sig);
 int		builtin_exec(t_shell *minishell);
 void	computing_exit_status(t_shell *minishell);
 void	heredoc_free(t_shell *minishell);
@@ -142,9 +148,7 @@ void	unset_del_elem(t_envp *tmp_exp, char *str, int f);
 int		get_exit(t_shell *minishell, char **str);
 int		get_exec(t_shell *minishell, char **str);
 char	*ft_getenv_value(t_envp *lst, char *key);
-void	cntrl_c(int sig);
-void	cntrl_c2(int sig);
-void	cntrl_backslash(int sig);
+void	ctrl_c(int sig);
 void	ft_lstadd_back_minishell(t_envp **lst, t_envp *new);
 void	ft_lstclear_minishell(t_envp **lst);
 t_envp	*ft_lstlast_minishell(t_envp *lst);

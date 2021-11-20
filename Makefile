@@ -6,7 +6,7 @@
 #    By: signacia <signacia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/16 20:18:53 by prochell          #+#    #+#              #
-#    Updated: 2021/11/17 20:58:00 by signacia         ###   ########.fr        #
+#    Updated: 2021/11/20 14:45:08 by signacia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ SRC    :=	minishell.c quotes_handler.c dollar_handler.c \
 			minishell_export.c minishell_cd.c minishell_cd_u.c \
 			minishell_echo.c errors_handler.c minishell_pwd.c lst_functions.c \
 			minishell_env.c shlvl_handler.c minishell_signals.c \
-			split_into_asterisk.c split_into_asterisk_u.c ft_split_once.c \
+			split_into_asterisk.c split_into_mandatory_u.c ft_split_once.c \
 
 OBJ    :=	$(SRC:.c=.o)
 HDR    :=	minishell.h
@@ -31,7 +31,7 @@ all:		$(NAME)
 
 $(NAME):	$(OBJ)
 			$(MAKE) -C libft
-			$(CC) $(CFLAGS) -Llibft -lft -lreadline -L/Users/${USER}/.brew/Cellar/readline/8.1/lib/ -ltermcap $(OBJ) -o $(NAME)
+			$(CC) $(CFLAGS) -Llibft -lft -lreadline -L/Users/${USER}/.brew/Cellar/readline/8.1/lib/ $(OBJ) -o $(NAME)
 
 bonus:
 
@@ -41,7 +41,7 @@ bonus:
 include		$(wildcard *.d)
 
 test:
-			$(CC) $(CFLAGS) -o test test.c -lreadline -ltermcap
+			$(CC) $(CFLAGS) -o test test.c -lreadline -L/Users/${USER}/.brew/Cellar/readline/8.1/lib/
 
 readline:
 			brew install readline

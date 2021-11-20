@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 16:41:29 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/15 18:54:36 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/20 15:21:56 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,7 @@ int	minishell_pre_executor(t_shell *minishell)
 		if (pipe(minishell->apps->fd))
 			return (runtime_error(minishell, NULL));
 	if (minishell->apps->output_file != NULL)
-		if (dup2(minishell->apps->fd_output_file, 1) == -1)
-			return (runtime_error(minishell, NULL));
+		dup2(minishell->apps->fd_output_file, 1);
 	if (minishell->apps->heredoc != NULL)
 		if (dup2(minishell->apps->fd_heredoc[0], 0) == -1)
 			return (runtime_error(minishell, NULL));

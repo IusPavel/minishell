@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   minishell_echo.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/05 18:22:26 by prochell          #+#    #+#             */
-/*   Updated: 2021/11/10 18:09:42 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/20 15:43:48 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ int	echo_check_flag(char *str)
 {
 	int	j;
 
-	j = 2;
 	if (str[0] == '-' && str[1] == 'n')
 	{
+		j = 2;
 		if (!str[j])
 			return (1);
 		while (str[j])
@@ -47,15 +47,26 @@ void	write_echo(char **args, int i, int n)
 		ft_putstr("\n");
 }
 
+static int	compare_echo(char *src)
+{
+	if ((src[0] == 'e' || src[0] == 'E')
+		&& (src[1] == 'c' || src[1] == 'C')
+		&& (src[2] == 'h' || src[2] == 'H')
+		&& (src[3] == 'o' || src[3] == 'O')
+		&& src[4] == '\0')
+		return (0);
+	return (1);
+}
+
 int	get_echo(t_shell *minishell, char **args)
 {
 	int	i;
 	int	n;
 
-	i = 1;
-	n = 0;
-	if (!ft_strcmp("echo", args[0]))
+	if (!compare_echo(args[0]))
 	{
+		i = 1;
+		n = 0;
 		if (args[1] == NULL)
 		{
 			minishell->child_exit_status = 0;
