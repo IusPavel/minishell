@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/08 17:23:15 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/14 19:14:26 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/20 21:06:31 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static int	handle_pipe(t_shell *minishell, int *i)
 			|| minishell->input[*i + 1] == '\t'))
 		++(*i);
 	if (minishell->input[*i + 1] == 0 || minishell->input[*i + 1] == '|'
-		|| minishell->input[*i + 1] == '<' || minishell->input[*i + 1] == '>'
+		|| minishell->input[*i + 1] == '>'
 		|| minishell->input[*i + 1] == '&')
 		return (syntax_error(minishell, minishell->input + *i + 1, 1));
 	if (minishell->input[*i] != 0 && minishell->input[*i + 1] != 0)

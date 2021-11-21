@@ -6,7 +6,7 @@
 /*   By: signacia <signacia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 16:41:29 by signacia          #+#    #+#             */
-/*   Updated: 2021/11/20 14:45:47 by signacia         ###   ########.fr       */
+/*   Updated: 2021/11/20 22:01:45 by signacia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ int	minishell_executor_pipe(t_shell *minishell)
 			dup2(minishell->apps->fd[1], 1);
 			close(minishell->apps->fd[0]);
 		}
+		if (minishell->apps->heredoc != NULL)
+			dup2(minishell->apps->fd_heredoc[0], 0);
 		if (minishell->apps->input_file != NULL)
 			if (dup2(minishell->apps->fd_input_file, 0) == -1)
 				exit (1);
